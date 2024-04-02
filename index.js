@@ -15,7 +15,7 @@ mongoose
   .then(() => {
     console.log("Connected to DB!");
     fastify
-      .listen({ port: 3000 })
+      .listen({ port: 8000 })
       .then(() => {
         console.log("server is active on port 3000");
       })
