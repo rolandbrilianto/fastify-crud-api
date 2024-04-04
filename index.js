@@ -1,4 +1,4 @@
-const port = 3000;
+const port = 8000;
 const host = `0.0.0.0`;
 
 const fastify = require("fastify")({ logger: true });
@@ -20,7 +20,7 @@ mongoose
     fastify
       .listen({ host: host, port: port })
       .then(() => {
-        console.log("server is active on port 3000");
+        console.log("server is active on port 8000");
       })
       .catch((err) => {
         fastify.log.error(err);
