@@ -1,6 +1,7 @@
 const Product = require("../models/product.model");
 
 const getProducts = async (request, reply) => {
+  //BELOM KELAR, harus mapping array nya filter yang mau diambil
   try {
     const products = await Product.find();
     console.log(products);
