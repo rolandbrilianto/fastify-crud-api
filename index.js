@@ -1,3 +1,6 @@
+const port = 3000;
+const host = `0.0.0.0`;
+
 const fastify = require("fastify")({ logger: true });
 const mongoose = require("mongoose");
 const productRoutes = require("./routes/product.route.js");
@@ -15,7 +18,7 @@ mongoose
   .then(() => {
     console.log("Connected to DB!");
     fastify
-      .listen({ port: 8000 })
+      .listen({ host: host, port: port })
       .then(() => {
         console.log("server is active on port 3000");
       })
