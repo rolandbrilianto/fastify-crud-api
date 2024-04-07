@@ -4,22 +4,12 @@ const getProducts = async (request, reply) => {
   //BELOM KELAR, harus mapping array nya filter yang mau diambil
   try {
     const products = await Product.find();
-    console.log(products);
-    const productResponse = {
-      name: products.name,
-      quantity: products.quantity,
-      price: products.price,
-      createdAt: products.createdAt,
-    };
-    console.log(productResponse);
-    if (products.image) {
-      productResponse.image = products.image;
-    }
+
     reply.status(200).send({
-      status: 20,
+      status: 200,
       success: true,
       message: "Data sukses diambil",
-      data: productResponse,
+      data: products,
     });
   } catch (error) {
     reply.status(500).send({ message: error.message });

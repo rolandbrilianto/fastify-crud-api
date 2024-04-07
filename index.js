@@ -4,11 +4,15 @@ const host = `0.0.0.0`;
 const fastify = require("fastify")({ logger: true });
 const mongoose = require("mongoose");
 const productRoutes = require("./routes/product.route.js");
-fastify.register(require("@fastify/formbody"), {
-  contentTypes: {
-    urlencoded: ["application/x-www-form-urlencoded"],
-  },
-});
+const fastifyFormBody = require('@fastify/formbody')
+
+fastify.register(fastifyFormBody)
+
+fastify.get("/",(req,reply)=>{
+  reply.send({
+    status: "ok health check"
+  })
+})
 fastify.register(productRoutes, { prefix: "/api/products" });
 
 mongoose
