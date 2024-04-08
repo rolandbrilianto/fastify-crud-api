@@ -1,6 +1,3 @@
-const port = 8000;
-const host = `0.0.0.0`;
-
 const fastify = require("fastify")({ logger: true });
 const mongoose = require("mongoose");
 const productRoutes = require("./routes/product.route.js");
@@ -16,14 +13,12 @@ fastify.get("/", (req, reply) => {
 fastify.register(productRoutes, { prefix: "/api/products" });
 
 mongoose
-  .connect(
-    "mongodb+srv://rolandbrilianto:Kipasangin_1@backenddb.09eeper.mongodb.net/Node-API?retryWrites=true&w=majority&appName=BackendDB"
-  )
+  .connect(process.env.MONGO_URL)
   .then(() => {
     console.log("Connected to DB!");
     fastify
-      .listen({ host: host, port: port })
-      // .listen({ port: port })
+      .listen({ host: process.env.HOST, port: process.env.PORT })
+      // .listen({ port: process.env.PORT })
       .then(() => {
         console.log(`server is active on port ${port}`);
       })

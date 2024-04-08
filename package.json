@@ -13,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "@fastify/formbody": "^7.4.0",
+    "dotenv": "^16.4.5",
     "fastify": "^4.26.2",
     "fastify-cli": "^6.1.1",
     "mongodb": "^6.5.0",
