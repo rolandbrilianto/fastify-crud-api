@@ -1,9 +1,19 @@
 const Product = require("../models/product.model");
 
 const getProducts = async (request, reply) => {
+  //pagination
+  const page = parseInt(request.query.page) || 1; // Nomor halaman, default 1
+  const limit = parseInt(request.query.limit) || 25; // Jumlah item per halaman, default 10
+
   //BELOM KELAR, harus mapping array nya filter yang mau diambil
   try {
-    const products = await Product.find();
+    const products = await Product.find()
+      .skip((page - 1) * limit)
+      .limit(limit);
+
+    const totalItems = await Product.countDocuments();
+
+    const totalPages = Math.ceil(totalItems / limit);
 
     const modifyProduct = (product) => {
       // Buat objek baru dengan properti yang diinginkan
@@ -27,6 +37,11 @@ const getProducts = async (request, reply) => {
       success: true,
       message: "Data sukses diambil",
       data: productsResponse,
+      pagination: {
+        currentPage: page,
+        totalPages: totalPages,
+        totalItems: totalItems,
+      },
     });
   } catch (error) {
     reply.status(500).send({ message: error.message });
@@ -62,10 +77,12 @@ const addProduct = async (request, reply) => {
   try {
     const product = await Product.create(request.body);
     const productResponse = {
+      id: product._id,
       name: product.name,
       quantity: product.quantity,
       price: product.price,
       createdAt: product.createdAt,
+      updatedAt: product.updatedAt,
     };
     if (product.image) {
       productResponse.image = product.image;
@@ -87,10 +104,25 @@ const updateProduct = async (request, reply) => {
     const product = await Product.findByIdAndUpdate(id, request.body);
 
     if (!product) {
-      return reply.status(404).send({ message: "Product not found" });
+      return reply
+        .status(404)
+        .send({ success: false, message: "Product not found" });
     }
     const updatedProduct = await Product.findById(id);
-    reply.status(200).send(updatedProduct);
+    const productResponse = {
+      id: updatedProduct._id,
+      name: updatedProduct.name,
+      quantity: updatedProduct.quantity,
+      price: updatedProduct.price,
+      createdAt: updatedProduct.createdAt,
+      updatedAt: updatedProduct.updatedAt,
+    };
+
+    reply.status(200).send({
+      success: true,
+      message: "data berhasil di ubah",
+      data: productResponse,
+    });
   } catch (error) {
     reply.status(500).send({ message: error.message });
   }
@@ -101,7 +133,9 @@ const deleteProduct = async (request, reply) => {
     const { id } = request.params;
     const product = await Product.findByIdAndDelete(id);
     if (!product) {
-      return reply.status(404).send({ message: "Product not found" });
+      return reply
+        .status(404)
+        .send({ success: false, message: "Product not found" });
     }
     reply.status(200).send({ message: "Product deleted successfully" });
   } catch (error) {
