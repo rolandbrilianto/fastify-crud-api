@@ -4,15 +4,15 @@ const host = `0.0.0.0`;
 const fastify = require("fastify")({ logger: true });
 const mongoose = require("mongoose");
 const productRoutes = require("./routes/product.route.js");
-const fastifyFormBody = require('@fastify/formbody')
+const fastifyFormBody = require("@fastify/formbody");
 
-fastify.register(fastifyFormBody)
+fastify.register(fastifyFormBody);
 
-fastify.get("/",(req,reply)=>{
+fastify.get("/", (req, reply) => {
   reply.send({
-    status: "ok health check"
-  })
-})
+    status: "ok health check",
+  });
+});
 fastify.register(productRoutes, { prefix: "/api/products" });
 
 mongoose
