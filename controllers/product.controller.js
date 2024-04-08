@@ -5,11 +5,28 @@ const getProducts = async (request, reply) => {
   try {
     const products = await Product.find();
 
+    const modifyProduct = (product) => {
+      // Buat objek baru dengan properti yang diinginkan
+      return {
+        id: product._id, // Ubah _id menjadi id
+        name: product.name,
+        quantity: product.quantity,
+        price: product.price,
+        createdAt: product.createdAt,
+        updatedAt: product.updatedAt,
+      };
+    };
+
+    const productsResponse = products.map((newProducts) => {
+      delete newProducts.__v;
+      return modifyProduct(newProducts);
+    });
+
     reply.status(200).send({
       status: 200,
       success: true,
       message: "Data sukses diambil",
-      data: products,
+      data: productsResponse,
     });
   } catch (error) {
     reply.status(500).send({ message: error.message });
@@ -21,10 +38,20 @@ const getSingleProduct = async (request, reply) => {
     const { id } = request.params;
     const product = await Product.findById(id);
 
+    const productResponse = {
+      id: product._id, // Ubah _id menjadi id
+      name: product.name,
+      quantity: product.quantity,
+      price: product.price,
+      createdAt: product.createdAt,
+      updatedAt: product.updatedAt,
+    };
+
     reply.status(200).code(200).send({
+      status: 200,
       success: true,
-      message: "Data berhasil diambil",
-      data: product,
+      message: "Data sukses diambil",
+      data: productResponse,
     });
   } catch (error) {
     reply.status(500).send({ message: error.message });
